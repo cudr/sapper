@@ -276,6 +276,7 @@ describe('basics', function() {
 		assert.equal(await title(), 'bar');
 	});
 
+
 	it('navigates between dynamic routes with same segments', async () => {
 		await page.goto(`${base}/dirs/bar/xyz`);
 		await start();
@@ -285,5 +286,23 @@ describe('basics', function() {
 		await page.click('[href="dirs/foo/xyz"]');
 		await wait(50);
 		assert.equal(await title(), 'B page');
+	});
+
+  	it('navigates to ...rest', async () => {
+		await page.goto(`${base}/abc/xyz`);
+		await start();
+
+		assert.equal(await title(), 'abc,xyz');
+
+		await page.click('[href="xyz/abc/deep"]');
+		await wait(50);
+		assert.equal(await title(), 'xyz,abc');
+
+		await page.click(`[href="xyz/abc/qwe/deep.json"]`);
+		await wait(50);
+		assert.equal(
+			await page.evaluate(() => document.body.textContent),
+			'xyz,abc,qwe'
+		);
 	});
 });
