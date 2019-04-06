@@ -292,5 +292,15 @@ describe('basics', function() {
 			await page.evaluate(() => document.body.textContent),
 			'xyz,abc,qwe'
 		);
+
+	it('navigates between dynamic routes with same segments', async () => {
+		await page.goto(`${base}/dirs/bar/xyz`);
+		await start();
+
+		assert.equal(await title(), 'A page');
+
+		await page.click('[href="dirs/foo/xyz"]');
+		await wait(50);
+		assert.equal(await title(), 'B page');
 	});
 });
